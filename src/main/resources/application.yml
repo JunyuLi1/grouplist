@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/ssmexample?useSSL=false&serverTimezone=UTC
+    username: birdadmin
+    password: 12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update  #
+    show-sql: true      #
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 100ms
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml  # ?? MyBatis Mapper XML ????, classpath?resources
+  configuration:
+    map-underscore-to-camel-case: true      # ????????
+  type-aliases-package: org.example.demo2.entity
