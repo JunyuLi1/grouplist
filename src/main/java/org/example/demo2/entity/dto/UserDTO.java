@@ -1,36 +1,27 @@
 package org.example.demo2.entity.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotEmpty;
 
 public class UserDTO {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column
-    @NotEmpty
     private String userName;
-    @Column
-    @NotEmpty
     private String password;
-    @Column
-    @NotEmpty
     private String email;
+    private String phone;
+    private String verifyCode;
 
     public UserDTO() {
     }
 
-    public UserDTO(String userName, int id, String password, String email) {
-        this.userName = userName;
+    public UserDTO(Integer id, String userName, String password, String email, String phone, String verifyCode) {
         this.id = id;
+        this.userName = userName;
         this.password = password;
         this.email = email;
+        this.phone = phone;
+        this.verifyCode = verifyCode;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -46,29 +37,35 @@ public class UserDTO {
         return email;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getVerifyCode() {
+        return verifyCode;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setVerifyCode(String verifyCode) {
+        this.verifyCode = verifyCode;
     }
 }
