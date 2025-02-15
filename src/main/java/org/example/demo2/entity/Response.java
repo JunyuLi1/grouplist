@@ -17,6 +17,10 @@ public class Response<T> {
         return new Response<>(HttpStatus.OK.value(),"success!", data);
     }
 
+    public static <T> Response<T> fail(T data) {
+        return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),"failed!", data);
+    }
+
     public Integer getCode() {
         return code;
     }

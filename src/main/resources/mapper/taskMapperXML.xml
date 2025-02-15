@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.demo2.mapper.TaskMapper">
+
+    <!-- 新增任务 -->
+    <insert id="createTask" parameterType="map">
+        INSERT INTO task
+        (task_id, task_title, description, creator_id, task_status, due_date, create_time, update_time, reminder_time, priority)
+        VALUES
+        (#{taskId}, #{taskTitle}, #{description}, #{creatorId}, #{taskStatus}, #{dueDate}, #{createTime}, #{updateTime}, #{reminderTime}, #{priority})
+    </insert>
+
+    <!--更新任务-->
+    <update id="updateTask" parameterType="map">
+        UPDATE task
+        <set>
+            <if test="taskTitle != null">task_title = #{taskTitle},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="creatorId != null">creator_id = #{creatorId},</if>
+            <if test="taskStatus != null">task_status = #{taskStatus},</if>
+            <if test="dueDate != null">due_date = #{dueDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="reminderTime != null">reminder_time = #{reminderTime},</if>
+            <if test="priority != null">priority = #{priority},</if>
+        </set>
+        WHERE task_id = #{taskId}
+    </update>
+
+    <!--添加协助者-->
+    <insert id="add_collaborator" parameterType="map">
+        INSERT INTO task_user
+            (task_id, user_id, role)
+        VALUES
+            (#{taskId}, #{userId}, #{collaboratorRole})
+    </insert>
+
+</mapper>

@@ -5,6 +5,30 @@ CREATE TABLE user (
     email VARCHAR(100)
 );
 
+CREATE TABLE task (
+    task_id        CHAR(36) PRIMARY KEY,          -- 使用 UUID (CHAR(36) 存储)
+    task_title     VARCHAR(255) NOT NULL,        -- 任务标题
+    description    TEXT,                         -- 任务描述
+    creator_id     BIGINT NOT NULL,                 -- 创建者 ID (外键, 关联 user 表)
+    task_status    ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED', 'ARCHIVED') NOT NULL DEFAULT 'PENDING', -- 任务状态
+    due_date       DATETIME,                     -- 截止时间
+    create_time    DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 任务创建时间
+    update_time    DATETIME DEFAULT CURRENT_TIMESTAMP, -- 任务更新时间
+    reminder_time  DATETIME,                     -- 提醒时间
+    priority       ENUM('LOW', 'MEDIUM', 'HIGH', 'URGENT') NOT NULL DEFAULT 'LOW', -- 任务优先级
+    CONSTRAINT fk_task_creator FOREIGN KEY (creator_id) REFERENCES user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE task_user (
+    user_id BIGINT NOT NULL,
+    task_id CHAR(36) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    PRIMARY KEY (user_id, task_id),
+    CONSTRAINT fk_task_user_user FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_task_user_task FOREIGN KEY (task_id) REFERENCES task(task_id) ON DELETE CASCADE
+);
+
+
 完成拦截器及会话管理：
     JWT 和 ThreadLocal 并不是替代关系，而是互补的
     JWT 让多个服务器共享用户身份信息，适用于分布式架构。

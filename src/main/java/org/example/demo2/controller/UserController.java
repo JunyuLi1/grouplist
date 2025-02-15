@@ -22,12 +22,12 @@ public class UserController {
     }
 
     @GetMapping("/getLoginCode")
-    public Response getLoginCode(@RequestBody UserDTO userDTO) {
+    public Response<String> getLoginCode(@RequestBody UserDTO userDTO) {
         return loginService.sendCode(userDTO.getPhone());
     }
 
     @GetMapping("/login")
-    public Response loginUser(@RequestBody UserDTO userDTO) {
+    public Response<String> loginUser(@RequestBody UserDTO userDTO) {
         return loginService.verifyCode(userDTO.getPhone(), userDTO.getVerifyCode(), userDTO.getUserName(), userDTO.getPassword(), userDTO.getEmail(), userDTO.getId());
     }
 }

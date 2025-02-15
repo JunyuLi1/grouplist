@@ -42,13 +42,13 @@ public class JwtToken {
         }
     }
 
-    public static void main(String[] args) {
-        User user = new User("test",1,"testPWD", "example@example.com");
-        String token = JwtToken.generateToken(user);
-        System.out.println(token);
-        Map<String, Object> claims = (Map<String, Object>) JwtToken.checkToken(token).get("user");
-        System.out.println(claims);
-
-    }
+//    public static void main(String[] args) {
+//        User user = new User("test",1,"testPWD", "example@example.com");
+//        String token = JwtToken.generateToken(user);
+//        System.out.println(token);
+//        Map<String, Object> claims = (Map<String, Object>) JwtToken.checkToken(token).get("user");
+//        System.out.println(claims);
+//
+//    }
 
 }

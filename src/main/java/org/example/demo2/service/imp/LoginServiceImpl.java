@@ -25,7 +25,7 @@ public class LoginServiceImpl implements LoginService {
         // 生成验证码
         String code = String.format("%06d", new Random().nextInt(999999));
 
-        // 保存到redis 使用JWT后不需要此操作
+        // 保存到redis
         stringRedisTemplate.opsForValue().set("login:code:"+phone, code, 2, TimeUnit.MINUTES);
 
         // 发送验证码，返回成功
