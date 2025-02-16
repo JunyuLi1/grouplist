@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class TaskDTO {
     private String taskTitle;
     private String description;
-    private Integer creatorId;
+    private Integer collaboratorID;
     private TaskStatus taskStatus;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dueDate;
@@ -22,27 +22,25 @@ public class TaskDTO {
     private LocalDateTime reminderTime;
     private TaskPriority priority;
     private String role;
-    private Integer collaborator;
     private String taskId;
 
     public TaskDTO() {
     }
 
-    public TaskDTO(String taskTitle, String taskId, Integer collaborator, String role, TaskPriority priority,
-                   LocalDateTime reminderTime, LocalDateTime updateTime, LocalDateTime createTime,
-                   LocalDateTime dueDate, TaskStatus taskStatus, Integer creatorId, String description) {
+    public TaskDTO(String taskTitle, String description, Integer collaboratorID, TaskStatus taskStatus,
+                   LocalDateTime dueDate, LocalDateTime createTime, LocalDateTime updateTime, LocalDateTime reminderTime,
+                   TaskPriority priority, String role, String taskId) {
         this.taskTitle = taskTitle;
-        this.taskId = taskId;
-        this.collaborator = collaborator;
-        this.role = role;
-        this.priority = priority;
-        this.reminderTime = reminderTime;
-        this.updateTime = updateTime;
-        this.createTime = createTime;
-        this.dueDate = dueDate;
-        this.taskStatus = taskStatus;
-        this.creatorId = creatorId;
         this.description = description;
+        this.collaboratorID = collaboratorID;
+        this.taskStatus = taskStatus;
+        this.dueDate = dueDate;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.reminderTime = reminderTime;
+        this.priority = priority;
+        this.role = role;
+        this.taskId = taskId;
     }
 
     public String getTaskTitle() {
@@ -61,12 +59,12 @@ public class TaskDTO {
         this.description = description;
     }
 
-    public Integer getCreatorId() {
-        return creatorId;
+    public Integer getCollaboratorID() {
+        return collaboratorID;
     }
 
-    public void setCreatorId(Integer creatorId) {
-        this.creatorId = creatorId;
+    public void setCollaboratorID(Integer collaboratorID) {
+        this.collaboratorID = collaboratorID;
     }
 
     public TaskStatus getTaskStatus() {
@@ -133,11 +131,4 @@ public class TaskDTO {
         this.taskId = taskId;
     }
 
-    public Integer getCollaborator() {
-        return collaborator;
-    }
-
-    public void setCollaborator(Integer collaborator) {
-        this.collaborator = collaborator;
-    }
 }

@@ -14,7 +14,7 @@ public class UserServiceImplement implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public User getUserById(UserDTO userDTO) {
-        return userMapper.selectUserById(userDTO.getId()); //调用userMapper中定义的函数
+    public User getUserById(Integer userid) {
+        return userMapper.selectUserById(userid); //调用userMapper中定义的函数
     }
 }

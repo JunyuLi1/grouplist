@@ -5,5 +5,5 @@ import org.example.demo2.entity.dto.UserDTO;
 
 
 public interface UserService {
-    User getUserById(UserDTO userDTO);
+    User getUserById(Integer userId);
 }

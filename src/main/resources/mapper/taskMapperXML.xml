@@ -36,4 +36,35 @@
             (#{taskId}, #{userId}, #{collaboratorRole})
     </insert>
 
+
+    <!--查询所有任务-->
+    <select id="findTasksByUserId" parameterType="java.lang.Integer" resultType="Task">
+        SELECT DISTINCT t.task_id AS taskId, t.task_title AS taskTitle
+        FROM task t
+        LEFT JOIN task_user tu ON t.task_id = tu.task_id
+        WHERE t.creator_id = #{userId} OR tu.user_id = #{userId}
+    </select>
+
+    <!--查询某个特定任务-->
+    <select id="findSpecificTask" parameterType="java.lang.String" resultType="Task">
+        SELECT t.task_id AS taskId,
+               t.task_title AS taskTitle,
+               t.description AS description,
+               t.creator_id AS creatorId,
+               t.task_status AS taskStatus,
+               t.due_date AS dueDate,
+               t.create_time AS createTime,
+               t.update_time AS updateTime,
+               t.reminder_time AS reminderTime,
+               t.priority AS priority
+        FROM task t
+        WHERE t.task_id = #{task_id}
+    </select>
+
+    <select id="findCollaborator" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT tu.user_id
+        FROM task_user tu
+        WHERE tu.task_id = #{task_id}
+    </select>
+
 </mapper>

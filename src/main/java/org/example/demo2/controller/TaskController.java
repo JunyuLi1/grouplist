@@ -4,6 +4,7 @@ import org.example.demo2.entity.Response;
 import org.example.demo2.entity.Task;
 import org.example.demo2.entity.dto.TaskDTO;
 import org.example.demo2.service.TaskService;
+import org.example.demo2.utils.UserHolder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,17 @@ public class TaskController {
 
     @PostMapping("/add_collaborator")
     public Response<String> add_collaborator(@RequestBody TaskDTO taskDTO) {
-        return taskService.addCollaborator(taskDTO.getTaskId(), taskDTO.getCollaborator(), taskDTO.getRole()); //调用service层相关函数
+        return taskService.addCollaborator(taskDTO.getTaskId(), taskDTO.getCollaboratorID(), taskDTO.getRole()); //调用service层相关函数
+    }
+
+    @GetMapping("/query_alltask")
+    public Response<String> get_all_taskList() {
+        Integer userid = UserHolder.getUser().getId();
+        return taskService.queryAllTask(userid); //调用service层相关函数
+    }
+
+    @GetMapping("/query_task")
+    public Response<String> get_task(@RequestBody TaskDTO taskDTO) {
+        return taskService.queryTask(taskDTO.getTaskId()); //调用service层相关函数
     }
 }

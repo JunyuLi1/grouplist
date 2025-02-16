@@ -5,6 +5,7 @@ import org.example.demo2.entity.User;
 import org.example.demo2.entity.dto.UserDTO;
 import org.example.demo2.service.LoginService;
 import org.example.demo2.service.UserService;
+import org.example.demo2.utils.UserHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +18,9 @@ public class UserController {
     private LoginService loginService;
 
     @GetMapping("/query_id")
-    public User getUserById(@RequestBody UserDTO userDTO) {
-        return userService.getUserById(userDTO); //调用service层相关函数
+    public User getUserById() {
+        User user= UserHolder.getUser();
+        return userService.getUserById(user.getId()); //调用service层相关函数
     }
 
     @GetMapping("/getLoginCode")
