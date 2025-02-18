@@ -5,6 +5,7 @@ import org.example.demo2.entity.Response;
 import org.example.demo2.entity.Task;
 import org.example.demo2.mapper.TaskMapper;
 import org.example.demo2.service.TaskService;
+import org.example.demo2.utils.BloomFilter;
 import org.example.demo2.utils.UserHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,7 +23,8 @@ public class TaskServiceImpl implements TaskService {
     private TaskMapper taskMapper;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
-
+    @Autowired
+    private BloomFilter bloomFilter;
 
     @Override
     public Response<String> createTask(Task task) {
@@ -35,12 +37,15 @@ public class TaskServiceImpl implements TaskService {
         if(result == 0 || addCollab_result == 0) {
             return Response.fail("创建失败");
         }
+        bloomFilter.add(taskId);
         return Response.success("创建成功");
     }
 
     @Override
     @Transactional
     public Response<String> updateTask(Task task) {
+        // 使用分布式锁
+
         int result = taskMapper.updateTask(task.getTaskId(), task.getTaskTitle(), task.getDescription(), task.getCreatorId(),
                 task.getTaskStatus(), task.getDueDate(), task.getCreateTime(), task.getUpdateTime(),
                 task.getReminderTime(), task.getPriority());
@@ -83,6 +88,8 @@ public class TaskServiceImpl implements TaskService {
             stringRedisTemplate.opsForHash().put(key, task.getTaskId(), task.getTaskTitle());
             returnValue.put(task.getTaskId(), task.getTaskTitle());
         }
+
+        // 需要添加随机timeout防止缓存key失效导致缓存雪崩
         stringRedisTemplate.expire(key, 2, TimeUnit.MINUTES);
 
 
@@ -91,8 +98,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Response<String> queryTask(String taskId) {
-        String key = "task:info:" + taskId; //此表结构为hash，k-v是task的每个属性
+        // 此时可能出现缓存击穿问题, 使用布隆过滤器判断是否存在，存在则继续下去
+//        if(!bloomFilter.contains(taskId)) {
+//            return Response.fail("没有该任务记录");
+//        }
+
         // 从redis中查询任务记录
+        String key = "task:info:" + taskId; //此表结构为hash，k-v是task的每个属性
         Map<Object, Object> taskInfo = stringRedisTemplate.opsForHash().entries(key);
         // 判断是否在redis中存在
         if (!taskInfo.isEmpty()) {
@@ -120,6 +132,8 @@ public class TaskServiceImpl implements TaskService {
         taskMap.put("collaborators", collaboratorIDs.toString());
 
         stringRedisTemplate.opsForHash().putAll(key, taskMap);
+
+        // 需要添加随机timeout防止缓存key失效导致缓存雪崩
         stringRedisTemplate.expire(key, 2, TimeUnit.MINUTES);
         return Response.success(taskMap.toString());
     }
