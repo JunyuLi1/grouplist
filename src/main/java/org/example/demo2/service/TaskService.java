@@ -13,4 +13,6 @@ public interface TaskService {
     Response<String> addCollaborator(String taskId, Integer userId, String collaboratorRole);
     Response<String> queryAllTask(Integer userId);
     Response<String> queryTask(String taskId);
+    Response<String> queryFrequentTask(String taskId);
+    Response<String> setFrequentTask(String taskId);
 }
