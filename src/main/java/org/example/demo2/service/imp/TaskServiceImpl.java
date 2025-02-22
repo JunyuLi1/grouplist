@@ -8,6 +8,8 @@ import org.example.demo2.service.TaskService;
 import org.example.demo2.utils.BloomFilter;
 import org.example.demo2.utils.RedisLock;
 import org.example.demo2.utils.UserHolder;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -23,10 +25,21 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskMapper taskMapper;
+
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
     @Autowired
     private BloomFilter bloomFilter;
+
+    @Resource
+    private RedissonClient redissonClient;
+
+    @Resource
+    private RedissonClient redissonClient2;
+
+    @Resource
+    private RedissonClient redissonClient3;
 
     @Override
     public Response<String> createTask(Task task) {
@@ -46,9 +59,12 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public Response<String> updateTask(Task task) {
-        // 使用分布式锁确保只有一人修改该任务
-        RedisLock lock = new RedisLock(stringRedisTemplate, "update_task"+task.getTaskId());
-        boolean isLock = lock.tryLock(300, TimeUnit.SECONDS);
+        // 使用redisson分布式锁, 并采用集群模式，确保只有一人在修改任务
+        RLock lock1 = redissonClient.getLock("update_task"+task.getTaskId());
+        RLock lock2 = redissonClient2.getLock("update_task"+task.getTaskId());
+        RLock lock3 = redissonClient3.getLock("update_task"+task.getTaskId());
+        RLock lock = redissonClient.getMultiLock(lock1, lock2, lock3);
+        boolean isLock = lock.tryLock();
         if(!isLock) {
             // 获取锁失败
             return Response.fail("该任务正在更新，请稍后重试");
