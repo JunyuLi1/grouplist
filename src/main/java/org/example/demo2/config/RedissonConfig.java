@@ -14,22 +14,7 @@ public class RedissonConfig {
         // 配置
         Config config = new Config();
         config.useSingleServer().setAddress("redis://localhost:6379");
-        return Redisson.create(config);
-    }
-
-    @Bean
-    public RedissonClient redissonClient2() {
-        // 配置
-        Config config = new Config();
-        config.useSingleServer().setAddress("redis://localhost:6380");
-        return Redisson.create(config);
-    }
-
-    @Bean
-    public RedissonClient redissonClient3() {
-        // 配置
-        Config config = new Config();
-        config.useSingleServer().setAddress("redis://localhost:6381");
+        //config.useClusterServers().addNodeAddress("redis://127.0.0.1:7001", "redis://127.0.0.1:7002");
         return Redisson.create(config);
     }
 }

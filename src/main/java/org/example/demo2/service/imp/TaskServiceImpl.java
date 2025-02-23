@@ -35,12 +35,6 @@ public class TaskServiceImpl implements TaskService {
     @Resource
     private RedissonClient redissonClient;
 
-    @Resource
-    private RedissonClient redissonClient2;
-
-    @Resource
-    private RedissonClient redissonClient3;
-
     @Override
     public Response<String> createTask(Task task) {
         String taskId = UUID.randomUUID().toString().replace("-", "");
@@ -60,10 +54,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public Response<String> updateTask(Task task) {
         // 使用redisson分布式锁, 并采用集群模式，确保只有一人在修改任务
-        RLock lock1 = redissonClient.getLock("update_task"+task.getTaskId());
-        RLock lock2 = redissonClient2.getLock("update_task"+task.getTaskId());
-        RLock lock3 = redissonClient3.getLock("update_task"+task.getTaskId());
-        RLock lock = redissonClient.getMultiLock(lock1, lock2, lock3);
+        RLock lock = redissonClient.getLock("update_task"+task.getTaskId());
         boolean isLock = lock.tryLock();
         if(!isLock) {
             // 获取锁失败

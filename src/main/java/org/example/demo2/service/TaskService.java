@@ -4,7 +4,6 @@ package org.example.demo2.service;
 import org.example.demo2.entity.Response;
 import org.example.demo2.entity.Task;
 
-import java.util.ArrayList;
 
 
 public interface TaskService {
